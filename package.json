@@ -21,6 +21,7 @@
   },
   "homepage": "https://github.com/svrcekmichal/react-sketchpad#readme",
   "dependencies": {
+    "proptypes": "^0.14.4",
     "react": "^0.14.0 || ^15.0.0",
     "react-dom": "^0.14.0 || ^15.0.0",
     "uuid": "^2.0.0"

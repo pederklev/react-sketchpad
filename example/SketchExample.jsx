@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { SketchPad, TOOL_PENCIL, TOOL_LINE, TOOL_RECTANGLE, TOOL_ELLIPSE } from './../src';
 import IO from 'socket.io-client'
 
-
 export default class SketchExample extends Component
 {
   socket = null;
@@ -19,7 +18,6 @@ export default class SketchExample extends Component
       items: []
     }
   }
-
 
   render() {
     const { tool, size, color, fill, fillColor, items } = this.state;
