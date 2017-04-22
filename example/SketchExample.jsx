@@ -11,11 +11,7 @@ export default class SketchExample extends Component
     super(props);
 
     this.state = {
-      tool:TOOL_PENCIL,
       size: 2,
-      color: '#000000',
-      fill: false,
-      fillColor: '#444444',
       items: []
     }
   }
@@ -29,14 +25,8 @@ export default class SketchExample extends Component
         <h1>React SketchPad</h1>
         <div style={{float:'left', marginRight:20}}>
           <SketchPad
-            width={500}
-            height={500}
-            animate={true}
             size={size}
-            color={color}
-            fillColor={fill ? fillColor : ''}
             items={items}
-            tool={tool}
           />
         </div>
 
