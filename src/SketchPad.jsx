@@ -65,22 +65,32 @@ export default class SketchPad extends Component {
   onMouseDown = (e) => {
     this.tool.onMouseDown(...this.getCursorPosition(e), this.props.color, this.props.size, this.props.fillColor);
 
-    this.tool2.onMouseDown(...this.getCursorPosition2(e), this.props.color, this.props.size, this.props.fillColor);
+    this.tool2.onMouseDown(...this.getCursorPosition2(e, 500), 'yellow', this.props.size, this.props.fillColor);
+  }
+
+  onMouseDown2 = (e) => {
+    this.tool2.onMouseDown(...this.getCursorPosition2(e, 0), this.props.color, this.props.size, this.props.fillColor);
 
   }
 
   onMouseMove = (e) => {
     this.tool.onMouseMove(...this.getCursorPosition(e));
+    this.tool2.onMouseMove(...this.getCursorPosition2(e, 500));
+  }
 
-    this.tool2.onMouseMove(...this.getCursorPosition2(e));
-    
+  onMouseMove2 = (e) => {
+    this.tool2.onMouseMove(...this.getCursorPosition2(e, 0));
+
   }
 
   onMouseUp = (e) => {
     this.tool.onMouseUp(...this.getCursorPosition(e));
+        this.tool2.onMouseUp(...this.getCursorPosition2(e, 500));
+  }
 
-    this.tool2.onMouseUp(...this.getCursorPosition2(e));
 
+  onMouseUp2 = (e) => {
+    this.tool2.onMouseUp(...this.getCursorPosition2(e, 0));
   }
 
   getCursorPosition(e) {
@@ -91,10 +101,10 @@ export default class SketchPad extends Component {
     ];
   }
 
-  getCursorPosition2(e) {
+  getCursorPosition2(e, offset) {
     const {top, left} = this.canvas2.getBoundingClientRect();
     return [
-      e.clientX - left,
+      e.clientX - left + offset,
       e.clientY - top
     ];
   }
@@ -117,10 +127,10 @@ export default class SketchPad extends Component {
       <canvas
         ref={(canvas) => { this.canvasRef2 = canvas; }}
         className={canvasClassName2}
-        onMouseDown={this.onMouseDown}
-        onMouseMove={this.onMouseMove}
-        onMouseOut={this.onMouseUp}
-        onMouseUp={this.onMouseUp}
+        onMouseDown={this.onMouseDown2}
+        onMouseMove={this.onMouseMove2}
+        onMouseOut={this.onMouseUp2}
+        onMouseUp={this.onMouseUp2}
         width={width}
         height={height}
       />
