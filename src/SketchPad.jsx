@@ -63,54 +63,24 @@ export default class SketchPad extends Component {
   }
 
   onMouseDown = (e) => {
-    const data = this.tool.onMouseDown(...this.getCursorPosition(e), this.props.color, this.props.size, this.props.fillColor);
+    this.tool.onMouseDown(...this.getCursorPosition(e), this.props.color, this.props.size, this.props.fillColor);
 
-    data && data[0] && this.props.onItemStart && this.props.onItemStart.apply(null, data);
+    this.tool2.onMouseDown(...this.getCursorPosition2(e), this.props.color, this.props.size, this.props.fillColor);
 
-
-    if (this.props.onDebouncedItemChange) {
-      this.interval = setInterval(this.onDebouncedMove, this.props.debounceTime);
-    }
-
-    const data2 = this.tool2.onMouseDown(...this.getCursorPosition2(e), this.props.color, this.props.size, this.props.fillColor);
-    data2 && data2[0] && this.props.onItemStart && this.props.onItemStart.apply(null, data2);
-    if (this.props.onDebouncedItemChange) {
-      this.interval = setInterval(this.onDebouncedMove, this.props.debounceTime);
-    }
-  }
-
-  onDebouncedMove = () => {
-    if (typeof this.tool.onDebouncedMouseMove == 'function' && this.props.onDebouncedItemChange) {
-      this.props.onDebouncedItemChange.apply(null, this.tool.onDebouncedMouseMove());
-    }
-
-    if (typeof this.tool2.onDebouncedMouseMove == 'function' && this.props.onDebouncedItemChange) {
-      this.props.onDebouncedItemChange.apply(null, this.tool2.onDebouncedMouseMove());
-    }
   }
 
   onMouseMove = (e) => {
-    const data = this.tool.onMouseMove(...this.getCursorPosition(e));
-    data && data[0] && this.props.onEveryItemChange && this.props.onEveryItemChange.apply(null, data);
+    this.tool.onMouseMove(...this.getCursorPosition(e));
 
-    const data2 = this.tool2.onMouseMove(...this.getCursorPosition2(e));
-    data2 && data2[0] && this.props.onEveryItemChange && this.props.onEveryItemChange.apply(null, data2);
+    this.tool2.onMouseMove(...this.getCursorPosition2(e));
+    
   }
 
   onMouseUp = (e) => {
-    const data = this.tool.onMouseUp(...this.getCursorPosition(e));
-    data && data[0] && this.props.onCompleteItem && this.props.onCompleteItem.apply(null, data);
-    if (this.props.onDebouncedItemChange) {
-      clearInterval(this.interval);
-      this.interval = null;
-    }
+    this.tool.onMouseUp(...this.getCursorPosition(e));
 
-    const data2 = this.tool2.onMouseUp(...this.getCursorPosition2(e));
-    data2 && data2[0] && this.props.onCompleteItem && this.props.onCompleteItem.apply(null, data2);
-    if (this.props.onDebouncedItemChange) {
-      clearInterval(this.interval);
-      this.interval = null;
-    }
+    this.tool2.onMouseUp(...this.getCursorPosition2(e));
+
   }
 
   getCursorPosition(e) {
