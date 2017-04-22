@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { SketchPad, TOOL_PENCIL, TOOL_LINE, TOOL_RECTANGLE, TOOL_ELLIPSE } from './../src';
-import IO from 'socket.io-client'
+
+
 
 export default class SketchExample extends Component
 {
@@ -19,6 +20,7 @@ export default class SketchExample extends Component
     }
   }
 
+
   render() {
     const { tool, size, color, fill, fillColor, items } = this.state;
     return (
@@ -34,7 +36,6 @@ export default class SketchExample extends Component
             fillColor={fill ? fillColor : ''}
             items={items}
             tool={tool}
-            onCompleteItem={(i) => wsClient.emit('addItem', i)}
           />
         </div>
         <div style={{float:'left'}}>
