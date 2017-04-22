@@ -1,14 +1,8 @@
 import React, {Component} from 'react';
 import { findDOMNode } from 'react-dom'
-import { Pencil, TOOL_PENCIL, Line, TOOL_LINE, Ellipse, TOOL_ELLIPSE, Rectangle, TOOL_RECTANGLE } from './tools'
+import { Pencil } from './tools'
 import PropTypes from 'proptypes';
 
-export const toolsMap = {
-  [TOOL_PENCIL]: Pencil,
-  [TOOL_LINE]: Line,
-  [TOOL_RECTANGLE]: Rectangle,
-  [TOOL_ELLIPSE]: Ellipse
-};
 
 export default class SketchPad extends Component {
 
@@ -24,8 +18,6 @@ export default class SketchPad extends Component {
     color: PropTypes.string,
     fillColor: PropTypes.string,
     size: PropTypes.number,
-    tool: PropTypes.string,
-    toolsMap: PropTypes.object,
     onItemStart: PropTypes.func, // function(stroke:Stroke) { ... }
     onEveryItemChange: PropTypes.func, // function(idStroke:string, x:number, y:number) { ... }
     onDebouncedItemChange: PropTypes.func, // function(idStroke, points:Point[]) { ... }
@@ -42,13 +34,12 @@ export default class SketchPad extends Component {
     canvasClassName: 'canvas',
     debounceTime: 1000,
     animate: true,
-    tool: TOOL_PENCIL,
-    toolsMap
+
+
   };
 
   constructor(props) {
     super(props);
-    this.initTool = this.initTool.bind(this);
     this.onMouseDown = this.onMouseDown.bind(this);
     this.onMouseMove = this.onMouseMove.bind(this);
     this.onDebouncedMove = this.onDebouncedMove.bind(this);
@@ -58,22 +49,18 @@ export default class SketchPad extends Component {
   componentDidMount() {
     this.canvas = findDOMNode(this.canvasRef);
     this.ctx = this.canvas.getContext('2d');
-    this.initTool(this.props.tool);
+    this.tool = Pencil(this.ctx);
+
   }
 
-  componentWillReceiveProps({tool, items}) {
+  componentWillReceiveProps({items}) {
     items
       .filter(item => this.props.items.indexOf(item) === -1)
       .forEach(item => {
-        this.initTool(item.tool);
         this.tool.draw(item, this.props.animate);
       });
-    this.initTool(tool);
   }
 
-  initTool(tool) {
-    this.tool = this.props.toolsMap[tool](this.ctx);
-  }
 
   onMouseDown(e) {
     const data = this.tool.onMouseDown(...this.getCursorPosition(e), this.props.color, this.props.size, this.props.fillColor);
