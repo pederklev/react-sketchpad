@@ -34,23 +34,21 @@ export default class SketchPad extends Component {
     canvasClassName: 'canvas',
     debounceTime: 1000,
     animate: true,
-
-
   };
 
   constructor(props) {
     super(props);
-    this.onMouseDown = this.onMouseDown.bind(this);
-    this.onMouseMove = this.onMouseMove.bind(this);
-    this.onDebouncedMove = this.onDebouncedMove.bind(this);
-    this.onMouseUp = this.onMouseUp.bind(this);
   }
 
   componentDidMount() {
     this.canvas = findDOMNode(this.canvasRef);
-    this.ctx = this.canvas.getContext('2d');
-    this.tool = Pencil(this.ctx);
+    this.canvas2 = findDOMNode(this.canvasRef2);
 
+    this.ctx = this.canvas.getContext('2d');
+    this.ctx2 = this.canvas2.getContext('2d');
+
+    this.tool = Pencil(this.ctx);
+    this.tool2 = Pencil(this.ctx2);
   }
 
   componentWillReceiveProps({items}) {
@@ -58,32 +56,52 @@ export default class SketchPad extends Component {
       .filter(item => this.props.items.indexOf(item) === -1)
       .forEach(item => {
         this.tool.draw(item, this.props.animate);
+        this.tool2.draw(item, this.props.animate);
       });
   }
 
-
-  onMouseDown(e) {
+  onMouseDown = (e) => {
     const data = this.tool.onMouseDown(...this.getCursorPosition(e), this.props.color, this.props.size, this.props.fillColor);
     data && data[0] && this.props.onItemStart && this.props.onItemStart.apply(null, data);
     if (this.props.onDebouncedItemChange) {
       this.interval = setInterval(this.onDebouncedMove, this.props.debounceTime);
     }
-  }
 
-  onDebouncedMove() {
-    if (typeof this.tool.onDebouncedMouseMove == 'function' && this.props.onDebouncedItemChange) {
-      this.props.onDebouncedItemChange.apply(null, this.tool.onDebouncedMouseMove());
+    const data2 = this.tool2.onMouseDown(...this.getCursorPosition(e), this.props.color, this.props.size, this.props.fillColor);
+    data2 && data2[0] && this.props.onItemStart && this.props.onItemStart.apply(null, data2);
+    if (this.props.onDebouncedItemChange) {
+      this.interval = setInterval(this.onDebouncedMove, this.props.debounceTime);
     }
   }
 
-  onMouseMove(e) {
-    const data = this.tool.onMouseMove(...this.getCursorPosition(e));
-    data && data[0] && this.props.onEveryItemChange && this.props.onEveryItemChange.apply(null, data);
+  onDebouncedMove = () => {
+    if (typeof this.tool.onDebouncedMouseMove == 'function' && this.props.onDebouncedItemChange) {
+      this.props.onDebouncedItemChange.apply(null, this.tool.onDebouncedMouseMove());
+    }
+
+    if (typeof this.tool2.onDebouncedMouseMove == 'function' && this.props.onDebouncedItemChange) {
+      this.props.onDebouncedItemChange.apply(null, this.tool2.onDebouncedMouseMove());
+    }
   }
 
-  onMouseUp(e) {
+  onMouseMove = (e) => {
+    const data = this.tool.onMouseMove(...this.getCursorPosition(e));
+    data && data[0] && this.props.onEveryItemChange && this.props.onEveryItemChange.apply(null, data);
+
+    const data2 = this.tool2.onMouseMove(...this.getCursorPosition(e));
+    data2 && data2[0] && this.props.onEveryItemChange && this.props.onEveryItemChange.apply(null, data2);
+  }
+
+  onMouseUp = (e) => {
     const data = this.tool.onMouseUp(...this.getCursorPosition(e));
     data && data[0] && this.props.onCompleteItem && this.props.onCompleteItem.apply(null, data);
+    if (this.props.onDebouncedItemChange) {
+      clearInterval(this.interval);
+      this.interval = null;
+    }
+
+    const data2 = this.tool2.onMouseUp(...this.getCursorPosition(e));
+    data2 && data2[0] && this.props.onCompleteItem && this.props.onCompleteItem.apply(null, data2);
     if (this.props.onDebouncedItemChange) {
       clearInterval(this.interval);
       this.interval = null;
@@ -100,7 +118,9 @@ export default class SketchPad extends Component {
 
   render() {
     const {width, height, canvasClassName} = this.props;
+
     return (
+      <div>
       <canvas
         ref={(canvas) => { this.canvasRef = canvas; }}
         className={canvasClassName}
@@ -111,6 +131,17 @@ export default class SketchPad extends Component {
         width={width}
         height={height}
       />
+      <canvas
+        ref={(canvas) => { this.canvasRef2 = canvas; }}
+        className={canvasClassName}
+        onMouseDown={this.onMouseDown}
+        onMouseMove={this.onMouseMove}
+        onMouseOut={this.onMouseUp}
+        onMouseUp={this.onMouseUp}
+        width={width}
+        height={height}
+      />
+      </div>
     )
   }
 }

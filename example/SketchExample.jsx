@@ -23,7 +23,6 @@ export default class SketchExample extends Component
             items={items}
           />
         </div>
-
       </div>
     );
   }
