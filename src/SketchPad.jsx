@@ -15,6 +15,7 @@ export default class SketchPad extends Component {
     items: PropTypes.array.isRequired,
     animate: PropTypes.bool,
     canvasClassName: PropTypes.string,
+    canvasClassName2: PropTypes.string,
     color: PropTypes.string,
     fillColor: PropTypes.string,
     size: PropTypes.number,
@@ -32,6 +33,7 @@ export default class SketchPad extends Component {
     size: 5,
     fillColor: '',
     canvasClassName: 'canvas',
+    canvasClassName2: 'canvas2',
     debounceTime: 1000,
     animate: true,
   };
@@ -62,12 +64,15 @@ export default class SketchPad extends Component {
 
   onMouseDown = (e) => {
     const data = this.tool.onMouseDown(...this.getCursorPosition(e), this.props.color, this.props.size, this.props.fillColor);
+
     data && data[0] && this.props.onItemStart && this.props.onItemStart.apply(null, data);
+
+
     if (this.props.onDebouncedItemChange) {
       this.interval = setInterval(this.onDebouncedMove, this.props.debounceTime);
     }
 
-    const data2 = this.tool2.onMouseDown(...this.getCursorPosition(e), this.props.color, this.props.size, this.props.fillColor);
+    const data2 = this.tool2.onMouseDown(...this.getCursorPosition2(e), this.props.color, this.props.size, this.props.fillColor);
     data2 && data2[0] && this.props.onItemStart && this.props.onItemStart.apply(null, data2);
     if (this.props.onDebouncedItemChange) {
       this.interval = setInterval(this.onDebouncedMove, this.props.debounceTime);
@@ -88,7 +93,7 @@ export default class SketchPad extends Component {
     const data = this.tool.onMouseMove(...this.getCursorPosition(e));
     data && data[0] && this.props.onEveryItemChange && this.props.onEveryItemChange.apply(null, data);
 
-    const data2 = this.tool2.onMouseMove(...this.getCursorPosition(e));
+    const data2 = this.tool2.onMouseMove(...this.getCursorPosition2(e));
     data2 && data2[0] && this.props.onEveryItemChange && this.props.onEveryItemChange.apply(null, data2);
   }
 
@@ -100,7 +105,7 @@ export default class SketchPad extends Component {
       this.interval = null;
     }
 
-    const data2 = this.tool2.onMouseUp(...this.getCursorPosition(e));
+    const data2 = this.tool2.onMouseUp(...this.getCursorPosition2(e));
     data2 && data2[0] && this.props.onCompleteItem && this.props.onCompleteItem.apply(null, data2);
     if (this.props.onDebouncedItemChange) {
       clearInterval(this.interval);
@@ -116,8 +121,16 @@ export default class SketchPad extends Component {
     ];
   }
 
+  getCursorPosition2(e) {
+    const {top, left} = this.canvas2.getBoundingClientRect();
+    return [
+      e.clientX - left,
+      e.clientY - top
+    ];
+  }
+
   render() {
-    const {width, height, canvasClassName} = this.props;
+    const {width, height, canvasClassName, canvasClassName2} = this.props;
 
     return (
       <div>
@@ -133,7 +146,7 @@ export default class SketchPad extends Component {
       />
       <canvas
         ref={(canvas) => { this.canvasRef2 = canvas; }}
-        className={canvasClassName}
+        className={canvasClassName2}
         onMouseDown={this.onMouseDown}
         onMouseMove={this.onMouseMove}
         onMouseOut={this.onMouseUp}
