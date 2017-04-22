@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { SketchPad, TOOL_PENCIL, TOOL_LINE, TOOL_RECTANGLE, TOOL_ELLIPSE } from './../src';
 import IO from 'socket.io-client'
 
-const wsClient = IO(`ws://127.0.0.1:12346`);
 
 export default class SketchExample extends Component
 {
@@ -21,9 +20,6 @@ export default class SketchExample extends Component
     }
   }
 
-  componentDidMount() {
-    wsClient.on('addItem', item => this.setState({items: this.state.items.concat([item])}));
-  }
 
   render() {
     const { tool, size, color, fill, fillColor, items } = this.state;
