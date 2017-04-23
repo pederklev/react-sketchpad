@@ -1,4 +1,1 @@
-export {
-  default as Pencil,
-  TOOL_PENCIL
-} from './Pencil';
+export { default as Pencil } from './Pencil';

@@ -139,6 +139,7 @@ export default class SketchPad extends Component {
   render() {
     const {width, height, canvasClassName, canvasClassName2} = this.props;
 
+
     return (
       <div>
       <canvas
