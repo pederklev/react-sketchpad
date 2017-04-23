@@ -56,8 +56,6 @@ export default class SketchPad extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    console.log(this.props);
-    console.log(nextProps);
 
     if(this.props.image != nextProps.image){
       const ctx = this.ctx;
