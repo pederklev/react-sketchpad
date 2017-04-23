@@ -27,7 +27,7 @@ export default class SketchPad extends Component {
   };
 
   static defaultProps = {
-    width: 500,
+    width: 600,
     height: 500,
     color: '#000',
     size: 5,
@@ -55,13 +55,19 @@ export default class SketchPad extends Component {
     this.drawImage(this.props.image);
   }
 
-  componentWillReceiveProps({items}) {
-    items
-      .filter(item => this.props.items.indexOf(item) === -1)
-      .forEach(item => {
-        this.tool.draw(item, this.props.animate);
-        this.tool2.draw(item, this.props.animate);
-      });
+  componentWillReceiveProps(nextProps) {
+    console.log(this.props);
+    console.log(nextProps);
+
+    if(this.props.image != nextProps.image){
+      const ctx = this.ctx;
+      ctx.clearRect(0,0,ctx.canvas.width, ctx.canvas.height);
+
+      const ctx2 = this.ctx2;
+      ctx2.clearRect(0,0,ctx.canvas.width, ctx.canvas.height);
+
+      this.drawImage(nextProps.image);
+    }
   }
 
   drawImage = (source) => {
@@ -88,7 +94,7 @@ export default class SketchPad extends Component {
   onMouseDown = (e) => {
     this.tool.onMouseDown(...this.getCursorPosition(e), this.props.color, this.props.size, this.props.fillColor);
 
-    this.tool2.onMouseDown(...this.getCursorPosition2(e, 500), 'yellow', this.props.size, this.props.fillColor);
+    this.tool2.onMouseDown(...this.getCursorPosition2(e, this.ctx2.canvas.width), 'yellow', this.props.size, this.props.fillColor);
   }
 
   onMouseDown2 = (e) => {
@@ -98,7 +104,7 @@ export default class SketchPad extends Component {
 
   onMouseMove = (e) => {
     this.tool.onMouseMove(...this.getCursorPosition(e));
-    this.tool2.onMouseMove(...this.getCursorPosition2(e, 500));
+    this.tool2.onMouseMove(...this.getCursorPosition2(e, this.ctx2.canvas.width));
   }
 
   onMouseMove2 = (e) => {
@@ -108,7 +114,7 @@ export default class SketchPad extends Component {
 
   onMouseUp = (e) => {
     this.tool.onMouseUp(...this.getCursorPosition(e));
-        this.tool2.onMouseUp(...this.getCursorPosition2(e, 500));
+        this.tool2.onMouseUp(...this.getCursorPosition2(e, this.ctx2.canvas.width));
   }
 
 

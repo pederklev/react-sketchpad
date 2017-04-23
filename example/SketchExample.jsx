@@ -10,10 +10,13 @@ export default class SketchExample extends Component
     super(props);
 
     this.state = {
-      size: 2,
-      items: []
+      size: .5,
+      items: [],
+      imageNr: 0,
     }
   }
+
+
 
   render() {
     const { size, items } = this.state;
@@ -23,8 +26,9 @@ export default class SketchExample extends Component
           <SketchPad
             size={size}
             items={items}
-            image={imageSrc[1]}
+            image={imageSrc[this.state.imageNr]}
           />
+          <button onClick={()=> this.setState(state => state.imageNr++)}>inc</button>
         </div>
       </div>
     );
