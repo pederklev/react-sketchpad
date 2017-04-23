@@ -51,6 +51,8 @@ export default class SketchPad extends Component {
 
     this.tool = Pencil(this.ctx);
     this.tool2 = Pencil(this.ctx2);
+
+    this.drawImage(this.props.image);
   }
 
   componentWillReceiveProps({items}) {
@@ -60,6 +62,16 @@ export default class SketchPad extends Component {
         this.tool.draw(item, this.props.animate);
         this.tool2.draw(item, this.props.animate);
       });
+  }
+
+  drawImage = (source) => {
+    console.log(source);
+    const imageObj1 = new Image();
+    imageObj1.src = source;
+    console.log(imageObj1);
+    imageObj1.onload = () => {
+        this.ctx.drawImage(imageObj1,0,0);
+}
   }
 
   onMouseDown = (e) => {

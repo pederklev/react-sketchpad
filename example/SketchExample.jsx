@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { SketchPad, TOOL_PENCIL, TOOL_LINE, TOOL_RECTANGLE, TOOL_ELLIPSE } from './../src';
 
+const imageSrc = 'https://s-media-cache-ak0.pinimg.com/236x/d7/b3/cf/d7b3cfe04c2dc44400547ea6ef94ba35.jpg';
+
 export default class SketchExample extends Component
 {
 
@@ -21,6 +23,7 @@ export default class SketchExample extends Component
           <SketchPad
             size={size}
             items={items}
+            image={imageSrc}
           />
         </div>
       </div>
