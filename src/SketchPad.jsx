@@ -65,15 +65,26 @@ export default class SketchPad extends Component {
   }
 
   drawImage = (source) => {
-    console.log(source);
-    const imageObj1 = new Image();
-    imageObj1.src = source;
-    console.log(imageObj1);
-    imageObj1.onload = () => {
-        this.ctx.drawImage(imageObj1,0,0);
-}
+    const img = new Image();
+    img.src = source;
+    const ctx = this.ctx;
+
+    img.onload = () => {
+      this._drawImageScaled(img, ctx);
+    }
   }
 
+  _drawImageScaled = (img, ctx) => {
+     const canvas = ctx.canvas ;
+     const hRatio = canvas.width  / img.width    ;
+     const vRatio =  canvas.height / img.height  ;
+     const ratio  = Math.min ( hRatio, vRatio );
+     const centerShift_x = ( canvas.width - img.width*ratio ) / 2;
+     const centerShift_y = ( canvas.height - img.height*ratio ) / 2;
+     // ctx.clearRect(0,0,canvas.width, canvas.height);
+     ctx.drawImage(img, 0,0, img.width, img.height,
+                        centerShift_x,centerShift_y,img.width*ratio, img.height*ratio);
+  }
   onMouseDown = (e) => {
     this.tool.onMouseDown(...this.getCursorPosition(e), this.props.color, this.props.size, this.props.fillColor);
 
