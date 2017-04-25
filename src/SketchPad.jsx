@@ -35,6 +35,13 @@ export default class SketchPad extends Component {
     this.tool = Pencil(this.ctx);
   }
 
+  midPoint = (p1, p2) => {
+    return {
+      x: (p1.x + p2.x) / 2,
+      y: (p1.y + p2.y) / 2,
+    };
+  };
+
   onMouseDown = e => {
     this.drawing = true;
   };
