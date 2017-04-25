@@ -92,7 +92,7 @@ export default class SketchPad extends Component {
   onMouseDown = (e) => {
     this.tool.onMouseDown(...this.getCursorPosition(e), this.props.color, this.props.size, this.props.fillColor);
 
-    this.tool2.onMouseDown(...this.getCursorPosition2(e, this.ctx2.canvas.width), 'yellow', this.props.size, this.props.fillColor);
+    this.tool2.onMouseDown(...this.getCursorPosition2(e, this.ctx2.canvas.width), '#d3e4ff', this.props.size, this.props.fillColor);
   }
 
   onMouseDown2 = (e) => {
