@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { findDOMNode } from 'react-dom';
-import { Pencil } from './tools';
+
 import PropTypes from 'proptypes';
 
 export default class SketchPad extends Component {
@@ -32,28 +32,65 @@ export default class SketchPad extends Component {
   componentDidMount() {
     this.canvas = findDOMNode(this.canvasRef);
     this.ctx = this.canvas.getContext('2d');
-    this.tool = Pencil(this.ctx);
   }
 
+  // Ikke brukt ennå
   midPoint = (p1, p2) => {
-    return {
-      x: (p1.x + p2.x) / 2,
-      y: (p1.y + p2.y) / 2,
-    };
+    return [(p1[0] + p2[0]) / 2, (p1[1] + p2[1]) / 2];
   };
 
   onMouseDown = e => {
     this.drawing = true;
+
+    let position = this.getCursorPosition(e);
+    this.points.push(position);
   };
 
   onMouseMove = e => {
+    if (!this.drawing) return;
+
     let position = this.getCursorPosition(e);
-    console.log(position);
-    this.drawing && this.points.push(position);
-    this.drawing && console.log(this.points);
+
+    if (this.points.length > 0) {
+      this.points.push(this.midPoint(position, this.points[this.points.length - 1]));
+    }
+
+    this.points.push(position);
+
+    this.ctx.lineWidth = 2;
+    this.ctx.lineJoin = 'round';
+    this.ctx.lineCap = 'round';
+    this.ctx.strokeStyle = 'rgb(60,60,60)';
+
+    let length = this.points.length;
+    this.ctx.beginPath();
+
+    if (length > 4) {
+      this.ctx.moveTo(...this.points[length - 4]);
+      this.ctx.quadraticCurveTo(...this.points[length - 3], ...this.points[length - 2]);
+      this.ctx.stroke();
+    }
+
+    // if (this.points.length > 1) {
+    //   let start = this.points.length - 2;
+    //   let end = this.points.length - 1;
+
+    //   this.ctx.beginPath();
+    //   this.ctx.moveTo(this.points[start].x, this.points[start].y);
+    //   this.ctx.lineTo(this.points[end].x, this.points[end].y);
+    //   this.ctx.stroke();
+    //   console.log(this.points);
+    // }
   };
 
   onMouseUp = e => {
+    this.drawing = false;
+    this.points = [];
+  };
+
+
+  // Mod til å tegne linje når peker går utenfor canvas. Rett linje mellom siste to punkter.
+  onMouseOut = e => {
     this.drawing = false;
     this.points = [];
   };

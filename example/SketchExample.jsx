@@ -14,11 +14,7 @@ export default class SketchExample extends Component {
     const { size, items } = this.state;
     return (
       <div>
-        <div style={{ float: 'left', marginRight: 20 }}>
-          <SketchPad size={size} items={items}  />
-
-
-        </div>
+        <SketchPad size={size} items={items} />
       </div>
     );
   }
