@@ -8,27 +8,38 @@ export default class SketchExample extends Component {
     this.state = {
       size: 0.5,
       imgNr: 0,
-      imgSrc: 'http://blog.clubcarlson.com/wp-content/uploads/2014/04/shutterstock_129314522-1024x876.jpg',
+      imgSrc: '',
       items: [],
+      writeInt: 0,
     };
   }
 
-  _getImg = () => {
-    const lastImg = 65;
+  componentDidMount(){
+    this._getImg()
+  }
 
-    let nextImgNr = Math.floor(Math.random() * lastImg + 1);
+  _getImg = () => {
+    const totImg = 65;
+
+    let nextImgNr = Math.floor(Math.random() * totImg + 1);
     let nextImgSrc = `./refs/img${nextImgNr}.png`;
 
     this.setState({ imageNr: nextImgNr, imgSrc: nextImgSrc });
   };
+
+  writeImgButton = () => {
+    this.setState(state => state.writeInt++);
+    console.log(this.state.writeInt);
+  }
 
   render() {
     const { size, items } = this.state;
     return (
       <div>
         <div style={{ float: 'left', marginRight: 20 }}>
-          <SketchPad size={size} items={items} image={this.state.imgSrc} />
-          <button style={{width: 50, height: 50, alignSelf: 'center'}} onClick={() => this._getImg()}>inc</button>
+          <SketchPad size={size} items={items} image={this.state.imgSrc} writeImg={this.state.writeInt} />
+          <button style={{width: 250, height: 100, alignSelf: 'center'}} onClick={() => this._getImg()}>next image</button>
+          <button style={{width: 130, height: 50, alignSelf: 'center'}} onClick={() => this.writeImgButton()}>make me an image</button>
         </div>
       </div>
     );
