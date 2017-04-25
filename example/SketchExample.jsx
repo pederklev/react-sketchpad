@@ -28,7 +28,7 @@ export default class SketchExample extends Component {
       <div>
         <div style={{ float: 'left', marginRight: 20 }}>
           <SketchPad size={size} items={items} image={this.state.imgSrc} />
-          <button onClick={() => this._getImg()}>inc</button>
+          <button style={{width: 50, height: 50, alignSelf: 'center'}} onClick={() => this._getImg()}>inc</button>
         </div>
       </div>
     );
