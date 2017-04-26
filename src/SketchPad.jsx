@@ -32,6 +32,11 @@ export default class SketchPad extends Component {
   componentDidMount() {
     this.canvas = findDOMNode(this.canvasRef);
     this.ctx = this.canvas.getContext('2d');
+
+    this.ctx.lineWidth = 2;
+    this.ctx.lineJoin = 'round';
+    this.ctx.lineCap = 'round';
+    this.ctx.strokeStyle = 'rgb(60,60,60)';
   }
 
   // Ikke brukt ennå
@@ -56,11 +61,6 @@ export default class SketchPad extends Component {
     }
 
     this.points.push(position);
-
-    this.ctx.lineWidth = 2;
-    this.ctx.lineJoin = 'round';
-    this.ctx.lineCap = 'round';
-    this.ctx.strokeStyle = 'rgb(60,60,60)';
 
     let length = this.points.length;
     this.ctx.beginPath();
@@ -89,8 +89,22 @@ export default class SketchPad extends Component {
   };
 
 
-  // Mod til å tegne linje når peker går utenfor canvas. Rett linje mellom siste to punkter.
   onMouseOut = e => {
+    if(!this.drawing) return;
+
+    let lastPoint = this.points.length-1;
+
+    let position = this.getCursorPosition(e);
+    this.points.push(position);
+
+    let length = this.points.length;
+
+    if (length > 4) {
+      this.ctx.moveTo(...this.points[length - 3]);
+      this.ctx.quadraticCurveTo(...this.points[length - 2], ...this.points[length - 1]);
+      this.ctx.stroke();
+    }
+
     this.drawing = false;
     this.points = [];
   };
@@ -112,7 +126,7 @@ export default class SketchPad extends Component {
           className={canvasClassName}
           onMouseDown={this.onMouseDown}
           onMouseMove={this.onMouseMove}
-          onMouseOut={this.onMouseUp}
+          onMouseOut={this.onMouseOut}
           onMouseUp={this.onMouseUp}
           width={width}
           height={height}
