@@ -17,8 +17,8 @@ export default class SketchPad extends Component {
   };
 
   static defaultProps = {
-    width: 600,
-    height: 500,
+    width: 1200,
+    height: 600,
     color: '#000',
     size: 5,
     fillColor: '',
@@ -33,7 +33,7 @@ export default class SketchPad extends Component {
     this.canvas = findDOMNode(this.canvasRef);
     this.ctx = this.canvas.getContext('2d');
 
-    this.ctx.lineWidth = 2;
+    this.ctx.lineWidth = 4;
     this.ctx.lineJoin = 'round';
     this.ctx.lineCap = 'round';
     this.ctx.strokeStyle = 'rgb(60,60,60)';
@@ -45,6 +45,9 @@ export default class SketchPad extends Component {
   };
 
   onMouseDown = e => {
+    this.ctx.fillStyle = 'rgba(256,256,256,0.1)';
+    this.ctx.fillRect(0,0,this.canvas.width, this.canvas.height);
+
     this.drawing = true;
 
     let position = this.getCursorPosition(e);
@@ -84,12 +87,6 @@ export default class SketchPad extends Component {
   };
 
   onMouseUp = e => {
-    this.drawing = false;
-    this.points = [];
-  };
-
-
-  onMouseOut = e => {
     if(!this.drawing) return;
 
     let lastPoint = this.points.length-1;
@@ -126,7 +123,7 @@ export default class SketchPad extends Component {
           className={canvasClassName}
           onMouseDown={this.onMouseDown}
           onMouseMove={this.onMouseMove}
-          onMouseOut={this.onMouseOut}
+          onMouseOut={this.onMouseUp}
           onMouseUp={this.onMouseUp}
           width={width}
           height={height}
