@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { SketchPad } from './../src';
+import SketchPad from '../src';
 
 export default class SketchExample extends Component {
   constructor(props) {
@@ -14,7 +14,7 @@ export default class SketchExample extends Component {
     const { size, items } = this.state;
     return (
       <div>
-        <SketchPad size={size} items={items} />
+        <SketchPad size={size} items={items} image={'./refs/img1.png'} />
       </div>
     );
   }
