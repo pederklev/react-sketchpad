@@ -37,6 +37,7 @@ export default class SketchPad extends Component {
     this.ctx2 = this.canvas2.getContext('2d');
 
     this.initSettings(this.ctx1);
+    this.initSettings(this.ctx2);
     this.drawImage(this.props.image, this.ctx1);
   }
 
@@ -88,6 +89,7 @@ export default class SketchPad extends Component {
     if (!this.drawing) return;
 
     let position = this.getCursorPosition(e);
+    console.log(position)
 
     if (this.points.length > 0) {
       this.points.push(this.midPoint(position, this.points[this.points.length - 1]));
